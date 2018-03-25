@@ -9,6 +9,8 @@ from keras.regularizers import l2
 from keras_gat import GraphAttention
 from keras_gat.utils import load_data
 
+import numpy as np
+
 # Read data
 A_train, X_train, Y_train, Y_val, Y_test, idx_train, idx_val, idx_test = load_data('cora')
 
@@ -28,9 +30,14 @@ es_patience = 100             # Patience fot early stopping
 X_train /= X_train.sum(1).reshape(-1, 1)
 A_train = A_train.toarray()
 
+# Set this to random adjacency matrix for edge weights
+A_train = np.multiply(A_train, np.random.rand(A_train.shape[0], A_train.shape[0]))
+
 # Model definition (as per Section 3.3 of the paper)
 X = Input(shape=(F, ))
 A = Input(shape=(N, ))
+
+
 
 dropout1 = Dropout(dropout_rate)(X)
 graph_attention_1 = GraphAttention(F_,

@@ -32,7 +32,7 @@ def load_data(dataset_str):
     """Load data."""
     FILE_PATH = os.path.abspath(__file__)
     DIR_PATH = os.path.dirname(FILE_PATH)
-    DATA_PATH = os.path.join(DIR_PATH, 'data/')
+    DATA_PATH = "/Users/albertazout/Git/keras-gat/keras_gat/data/"
 
     names = ['x', 'y', 'tx', 'ty', 'allx', 'ally', 'graph']
     objects = []

@@ -102,13 +102,16 @@ class GraphAttention(Layer):
             # Attention head a(Wh_i, Wh_j) = a^T [[Wh_i], [Wh_j]]
             dense = attn_for_self + K.transpose(attn_for_neighs)  # (N x N) via broadcasting
 
-            # Add nonlinearty
-            dense = LeakyReLU(alpha=0.2)(dense)
-
             # Mask values before activation (Vaswani et al., 2017)
             comparison = K.equal(A, K.constant(0.))
             mask = K.switch(comparison, K.ones_like(A) * -10e9, K.zeros_like(A))
+
+            # Attenuate dense by edge weights
+            dense = K.tf.multiply(dense, A)
             masked = dense + mask
+
+            # Add nonlinearty
+            masked = LeakyReLU(alpha=0.2)(masked)
 
             # Feed masked values to softmax
             softmax = K.softmax(masked)  # (N x N), attention coefficients
